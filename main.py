@@ -1,5 +1,6 @@
 import streamlit as st
 import boto3
+from helper_functions import display_metrics
 import json
 
 # AWS Credentials
@@ -21,7 +22,7 @@ if data:
     # Ensure the CIK is a string and has leading zeros if necessary
     cik_str = company_number.zfill(10)
     
-    # Retrieve s3 key from DynamoDB
+    # Retrieve s3 key from DynamoDB for Risk Factors
     table = dynamodb.Table('sec_text')
     response = table.get_item(Key={'companyID': cik_str})
     if 'Item' in response:
@@ -32,14 +33,36 @@ if data:
             s3_key = risk_factors[latest_year]['s3key']
             bucket_name = 'argoxai-sec'
             
-            # Retrieve the text file from S3
+            # Retrieve the text file from S3 for Risk Factors
             obj = s3_client.get_object(Bucket=bucket_name, Key=s3_key)
             text_data = obj['Body'].read().decode('utf-8')
             
-            # Display the text file content
+            # Display the text file content for Risk Factors
             st.text_area("Risk Factors", value=text_data, height=900)
         else:
             st.error("No data available for the latest year.")
     else:
         st.error("CIK code not found in the database.")
 
+    # Retrieve financial ratios from DynamoDB
+    ratios_table = dynamodb.Table('sec_ratios')
+    ratios_response = ratios_table.get_item(Key={'companyID': cik_str, 'year': latest_year})
+    if 'Item' in ratios_response:
+        cost_of_sales_data = ratios_response['Item']['cost_of_sales']['L'][-1]['M']['value']['S']
+        stocks_data = ratios_response['Item']['stocks']['L'][-1]['M']['value']['S']
+        
+        # Adjust for decimals
+        cost_of_sales = int(cost_of_sales_data) / (10 ** int(ratios_response['Item']['cost_of_sales']['L'][-1]['M']['decimals']['S']))
+        stocks = int(stocks_data) / (10 ** int(ratios_response['Item']['stocks']['L'][-1]['M']['decimals']['S']))
+        
+        # Calculate ITR Ratio
+        itr_ratio = cost_of_sales / stocks
+
+        if itr_ratio:
+            with st.container():
+                st.header('ITR Ratio')
+                display_metrics('ITR', itr_ratio)
+        else:
+            st.warning("ITR Ratio is not available or is null.")
+    else:
+        st.error("Financial ratios not found in the database.")
