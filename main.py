@@ -17,19 +17,14 @@ with open( "style.css" ) as css:
 # st. set_page_config(layout="wide")
 # title
 st.title("ArgoXai")
-st.subheader("HERCULES - Contextual Financial Reviewer (Release G2)")
-
+# st.subheader("Risk 1A")
 
 col1, col2, col3, c4, c5, c6, c7 ,c8 = st.columns([3,3,1,1,1,1,1,1])
-company_number = col1.text_input("Enter the company number")
-iterations = col2.number_input("How many review vectors?", value=1)
+company_number = col1.text_input("Enter CIK code")
+# iterations = col2.number_input("How many review vectors?", value=1)
+data = st.button("Retrieve Data")
 
-
-
-calculate_ratio = st.button("Start Analysis")
-
-
-if calculate_ratio:  # calc ratio button pressed
+if data:  # calc ratio button pressed
 
     pass
 
