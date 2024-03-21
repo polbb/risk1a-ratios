@@ -1,33 +1,48 @@
-# APP VERSION v0.1-D
 import streamlit as st
-# from dotenv import load_dotenv
-import os
+import boto3
+import json
 
-# # initialize client
-# load_dotenv('./.env.txt')
+# AWS Credentials
 aws_access_key_id = st.secrets.AWS_ACCESS_KEY_ID
 aws_secret_access_key = st.secrets.AWS_SECRET_ACCESS_KEY
 aws_default_region = st.secrets.AWS_DEFAULT_REGION
 
+# AWS Services Clients
+s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_default_region)
+dynamodb = boto3.resource('dynamodb', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_default_region)
 
-with open( "style.css" ) as css:
-    st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
-    
-
-# st. set_page_config(layout="wide")
-# title
+# Streamlit UI
 st.title("ArgoXai")
-# st.subheader("Risk 1A")
-
-col1, col2, col3, c4, c5, c6, c7 ,c8 = st.columns([3,3,1,1,1,1,1,1])
+col1, _, _, _, _, _, _, _ = st.columns([3,3,1,1,1,1,1,1])
 company_number = col1.text_input("Enter CIK code")
-# iterations = col2.number_input("How many review vectors?", value=1)
 data = st.button("Retrieve Data")
 
-if data:  # calc ratio button pressed
-
+if data:
     # Ensure the CIK is a string and has leading zeros if necessary
-    cik_str = str(data).zfill(10)
-
+    cik_str = company_number.zfill(10)
     
+    # Retrieve s3 key from DynamoDB
+    table = dynamodb.Table('sec_text')
+    response = table.get_item(Key={'CIK': cik_str})
+    if 'Item' in response:
+        risk_factors = response['Item']['RiskFactors1A']
+        # Find the latest year in the risk factors
+        latest_year = max(risk_factors.keys(), key=lambda x: int(x))
+        if latest_year:
+            s3_key = risk_factors[latest_year]['s3Key']
+            bucket_name = 'argoxai-sec'
+            file_path = f'txt/risk_factors/{s3_key}'
+            
+            # Retrieve the text file from S3
+            obj = s3_client.get_object(Bucket=bucket_name, Key=file_path)
+            text_data = obj['Body'].read().decode('utf-8')
+            
+            # Display the text file content
+            st.text_area("Risk Factors", value=text_data, height=300)
+        else:
+            st.error("No data available for the latest year.")
+    else:
+        st.error("CIK code not found in the database.")
+
+
 
