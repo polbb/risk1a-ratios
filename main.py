@@ -41,7 +41,7 @@ if data:
             text_data = obj['Body'].read().decode('utf-8')
             
             # Display the text file content for Risk Factors
-            st.text_area("Risk Factors", value=text_data, height=600)
+            st.text_area("Risk Factors", value=text_data, height=500)
         else:
             st.error("No data available for the latest year.")
     else:
@@ -62,7 +62,7 @@ if data:
             itr_ratio_previous = cost_of_sales_data_previous / stocks_data_previous
 
             with st.container(border=True):
-                c1, c2,_,_ = st.columns([1,1,1,1])
+                c1, c2,_,_,_ = st.columns([1,1,1,1,1])
 
                 with c1.container(border=True):
                     st.header('ITR Ratio')
