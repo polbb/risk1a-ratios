@@ -104,6 +104,9 @@ if data:
             with c6.container(border=True):
                 st.header('Cash Ratio')
                 display_metrics('Cash Latest', cash_ratio_latest, 'Cash Previous', cash_ratio_previous)
+            st.header('GAP Index')
+            display_metrics('GAP Latest', gap_index_latest, 'GAP Previous', gap_index_previous)
+
     else:
         st.error("Financial ratios not found in the database.")
 
