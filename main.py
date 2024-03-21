@@ -1,7 +1,6 @@
 import streamlit as st
 import boto3
 from helper_functions import display_metrics, display_metrics_floor
-import json
 
 with open( "style.css" ) as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
@@ -16,6 +15,7 @@ s3_client = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_a
 dynamodb = boto3.resource('dynamodb', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key, region_name=aws_default_region)
 
 # Streamlit UI
+st.set_page_config(layout="wide")  # Force wide mode
 st.title("ArgoXai")
 col1, col2, _, _, _, _, _, _ = st.columns([3,3,1,1,1,1,1,1])
 company_number = col1.text_input("Enter CIK code")
