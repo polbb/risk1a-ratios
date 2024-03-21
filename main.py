@@ -29,7 +29,7 @@ if data:
         # Find the latest year in the risk factors
         latest_year = max(risk_factors.keys(), key=lambda x: int(x))
         if latest_year:
-            s3_key = risk_factors[latest_year]['s3Key']
+            s3_key = risk_factors[latest_year]['s3key']
             bucket_name = 'argoxai-sec'
             file_path = f'txt/risk_factors/{s3_key}'
             
