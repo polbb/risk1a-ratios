@@ -9,6 +9,9 @@ def make_dataframe(results):
     return df
 
 
-def display_metrics(name, ratio):
-    col1, col2, col3, col4 = st.columns([3,1,1,1])
-    col1.metric(name, f"{round(ratio, 2)}")
+def display_metrics(name, ratio, col):
+    col1, col2 = st.columns([3,3])
+    if col == 1:
+        col1.metric(name, f"{round(ratio, 2)}")
+    elif col == 2:
+        col2.metric(name, f"{round(ratio, 2)}")
