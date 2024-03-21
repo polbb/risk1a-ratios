@@ -66,7 +66,7 @@ if data:
             itr_ratio = cost_of_sales / stocks
 
             if itr_ratio:
-                with st.container():
+                with st.container(border=True):
                     st.header('ITR Ratio')
                     display_metrics('ITR', itr_ratio)
             else:
