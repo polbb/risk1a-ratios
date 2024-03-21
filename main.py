@@ -23,7 +23,7 @@ if data:
     
     # Retrieve s3 key from DynamoDB
     table = dynamodb.Table('sec_text')
-    response = table.get_item(Key={'CIK': cik_str})
+    response = table.get_item(Key={'companyID': cik_str})
     if 'Item' in response:
         risk_factors = response['Item']['RiskFactors1A']
         # Find the latest year in the risk factors
