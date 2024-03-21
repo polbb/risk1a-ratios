@@ -62,8 +62,11 @@ if data:
             itr_ratio_previous = cost_of_sales_data_previous / stocks_data_previous
 
             with st.container(border=True):
-                st.header('ITR Ratio')
-                display_metrics('ITR Latest Year', itr_ratio_latest, 'ITR Previous Year', itr_ratio_previous)
+                c1, c2,_,_ = st.columns([1,1,1,1])
+
+                with c1.container(border=True):
+                    st.header('ITR Ratio')
+                    display_metrics('ITR Latest Year', itr_ratio_latest, 'ITR Previous Year', itr_ratio_previous)
         else:
             st.error("Cost of Sales or Stocks data is not available for one or both years.")
     else:
