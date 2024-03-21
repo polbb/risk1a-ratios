@@ -3,6 +3,9 @@ import boto3
 from helper_functions import display_metrics
 import json
 
+with open( "style.css" ) as css:
+    st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
+
 # AWS Credentials
 aws_access_key_id = st.secrets.AWS_ACCESS_KEY_ID
 aws_secret_access_key = st.secrets.AWS_SECRET_ACCESS_KEY
