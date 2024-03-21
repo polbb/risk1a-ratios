@@ -60,8 +60,7 @@ if data:
 
             with st.container(border=True):
                 st.header('ITR Ratio')
-                display_metrics('ITR Latest Year', itr_ratio_latest, col=1)
-                display_metrics('ITR Previous Year', itr_ratio_previous, col=2)
+                display_metrics('ITR Latest Year', itr_ratio_latest, 'ITR Previous Year', itr_ratio_previous)
         else:
             st.error("Cost of Sales or Stocks data is not available for one or both years.")
     else:
