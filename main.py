@@ -55,21 +55,27 @@ if data:
     ratios_response = ratios_table.get_item(Key={'companyID': cik_str, 'year': latest_year})
     if 'Item' in ratios_response:
         # Retrieve data for calculations
-        current_assets_latest = int(ratios_response['Item'].get('current_assets', [{}])[0].get('value', 'N/A'))
-        creditors_latest = int(ratios_response['Item'].get('creditors', [{}])[0].get('value', 'N/A'))
-        inventory_prepaid_expenses_latest = int(ratios_response['Item'].get('inventory_prepaid_expenses', [{}])[0].get('value', 'N/A'))
-        cost_of_sales_latest = int(ratios_response['Item'].get('cost_of_sales', [{}])[0].get('value', 'N/A'))
-        stocks_latest = int(ratios_response['Item'].get('stocks', [{}])[0].get('value', 'N/A'))
-        total_assets_latest = int(ratios_response['Item'].get('total_assets', [{}])[0].get('value', 'N/A'))
-        cash_and_cash_equivalents_latest = int(ratios_response['Item'].get('cash_and_cash_equivalents', [{}])[0].get('value', 'N/A'))
+        def parse_int(value):
+            try:
+                return int(value)
+            except ValueError:
+                return 'N/A'
 
-        current_assets_previous = int(ratios_response['Item'].get('current_assets', [{}])[1].get('value', 'N/A'))
-        creditors_previous = int(ratios_response['Item'].get('creditors', [{}])[1].get('value', 'N/A'))
-        inventory_prepaid_expenses_previous = int(ratios_response['Item'].get('inventory_prepaid_expenses', [{}])[1].get('value', 'N/A'))
-        cost_of_sales_previous = int(ratios_response['Item'].get('cost_of_sales', [{}])[1].get('value', 'N/A'))
-        stocks_previous = int(ratios_response['Item'].get('stocks', [{}])[1].get('value', 'N/A'))
-        total_assets_previous = int(ratios_response['Item'].get('total_assets', [{}])[1].get('value', 'N/A'))
-        cash_and_cash_equivalents_previous = int(ratios_response['Item'].get('cash_and_cash_equivalents', [{}])[1].get('value', 'N/A'))
+        current_assets_latest = parse_int(ratios_response['Item'].get('current_assets', [{}])[0].get('value', 'N/A'))
+        creditors_latest = parse_int(ratios_response['Item'].get('creditors', [{}])[0].get('value', 'N/A'))
+        inventory_prepaid_expenses_latest = parse_int(ratios_response['Item'].get('inventory_prepaid_expenses', [{}])[0].get('value', 'N/A'))
+        cost_of_sales_latest = parse_int(ratios_response['Item'].get('cost_of_sales', [{}])[0].get('value', 'N/A'))
+        stocks_latest = parse_int(ratios_response['Item'].get('stocks', [{}])[0].get('value', 'N/A'))
+        total_assets_latest = parse_int(ratios_response['Item'].get('total_assets', [{}])[0].get('value', 'N/A'))
+        cash_and_cash_equivalents_latest = parse_int(ratios_response['Item'].get('cash_and_cash_equivalents', [{}])[0].get('value', 'N/A'))
+
+        current_assets_previous = parse_int(ratios_response['Item'].get('current_assets', [{}])[1].get('value', 'N/A'))
+        creditors_previous = parse_int(ratios_response['Item'].get('creditors', [{}])[1].get('value', 'N/A'))
+        inventory_prepaid_expenses_previous = parse_int(ratios_response['Item'].get('inventory_prepaid_expenses', [{}])[1].get('value', 'N/A'))
+        cost_of_sales_previous = parse_int(ratios_response['Item'].get('cost_of_sales', [{}])[1].get('value', 'N/A'))
+        stocks_previous = parse_int(ratios_response['Item'].get('stocks', [{}])[1].get('value', 'N/A'))
+        total_assets_previous = parse_int(ratios_response['Item'].get('total_assets', [{}])[1].get('value', 'N/A'))
+        cash_and_cash_equivalents_previous = parse_int(ratios_response['Item'].get('cash_and_cash_equivalents', [{}])[1].get('value', 'N/A'))
 
         # Calculate ratios for latest and previous year
         wc_ratio_latest = current_assets_latest / creditors_latest if 'N/A' not in [current_assets_latest, creditors_latest] else 'N/A'
@@ -107,8 +113,6 @@ if data:
             with c6.container(border=True):
                 st.header('Cash Ratio')
                 display_metrics('Cash Latest', cash_ratio_latest, 'Cash Previous', cash_ratio_previous)
-            # st.header('GAP Index')
-            # display_metrics('GAP Latest', gap_index_latest, 'GAP Previous', gap_index_previous)
 
     else:
         st.error("Financial ratios not found in the database.")
