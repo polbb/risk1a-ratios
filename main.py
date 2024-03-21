@@ -51,24 +51,59 @@ if data:
     ratios_table = dynamodb.Table('sec_ratios')
     ratios_response = ratios_table.get_item(Key={'companyID': cik_str, 'year': latest_year})
     if 'Item' in ratios_response:
-        cost_of_sales_data_latest = int(ratios_response['Item'].get('cost_of_sales', [{}])[0].get('value', 'N/A'))
-        stocks_data_latest = int(ratios_response['Item'].get('stocks', [{}])[0].get('value', 'N/A'))
-        cost_of_sales_data_previous = int(ratios_response['Item'].get('cost_of_sales', [{}])[1].get('value', 'N/A'))
-        stocks_data_previous = int(ratios_response['Item'].get('stocks', [{}])[1].get('value', 'N/A'))
-        
-        if cost_of_sales_data_latest != 'N/A' and stocks_data_latest != 'N/A' and cost_of_sales_data_previous != 'N/A' and stocks_data_previous != 'N/A':
-            # Calculate ITR Ratio for latest and previous year
-            itr_ratio_latest = cost_of_sales_data_latest / stocks_data_latest
-            itr_ratio_previous = cost_of_sales_data_previous / stocks_data_previous
+        # Retrieve data for calculations
+        current_assets_latest = int(ratios_response['Item'].get('current_assets', [{}])[0].get('value', 'N/A'))
+        creditors_latest = int(ratios_response['Item'].get('creditors', [{}])[0].get('value', 'N/A'))
+        inventory_prepaid_expenses_latest = int(ratios_response['Item'].get('inventory_prepaid_expenses', [{}])[0].get('value', 'N/A'))
+        cost_of_sales_latest = int(ratios_response['Item'].get('cost_of_sales', [{}])[0].get('value', 'N/A'))
+        stocks_latest = int(ratios_response['Item'].get('stocks', [{}])[0].get('value', 'N/A'))
+        total_assets_latest = int(ratios_response['Item'].get('total_assets', [{}])[0].get('value', 'N/A'))
+        cash_and_cash_equivalents_latest = int(ratios_response['Item'].get('cash_and_cash_equivalents', [{}])[0].get('value', 'N/A'))
 
-            with st.container(border=True):
-                c1, c2,_,_,_ = st.columns([1,1,1,1,1])
+        current_assets_previous = int(ratios_response['Item'].get('current_assets', [{}])[1].get('value', 'N/A'))
+        creditors_previous = int(ratios_response['Item'].get('creditors', [{}])[1].get('value', 'N/A'))
+        inventory_prepaid_expenses_previous = int(ratios_response['Item'].get('inventory_prepaid_expenses', [{}])[1].get('value', 'N/A'))
+        cost_of_sales_previous = int(ratios_response['Item'].get('cost_of_sales', [{}])[1].get('value', 'N/A'))
+        stocks_previous = int(ratios_response['Item'].get('stocks', [{}])[1].get('value', 'N/A'))
+        total_assets_previous = int(ratios_response['Item'].get('total_assets', [{}])[1].get('value', 'N/A'))
+        cash_and_cash_equivalents_previous = int(ratios_response['Item'].get('cash_and_cash_equivalents', [{}])[1].get('value', 'N/A'))
 
-                with c1.container(border=True):
-                    st.header('ITR Ratio')
-                    display_metrics('ITR Latest Year', itr_ratio_latest, 'ITR Previous Year', itr_ratio_previous)
-        else:
-            st.error("Cost of Sales or Stocks data is not available for one or both years.")
+        # Calculate ratios for latest and previous year
+        wc_ratio_latest = current_assets_latest / creditors_latest
+        quick_ratio_latest = (current_assets_latest - inventory_prepaid_expenses_latest) / creditors_latest
+        itr_ratio_latest = cost_of_sales_latest / stocks_latest
+        wr_score_latest = (current_assets_latest / total_assets_latest) / (creditors_latest / total_assets_latest)
+        gap_index_latest = (itr_ratio_latest / wr_score_latest) * 100
+        cash_ratio_latest = cash_and_cash_equivalents_latest / creditors_latest
+
+        wc_ratio_previous = current_assets_previous / creditors_previous
+        quick_ratio_previous = (current_assets_previous - inventory_prepaid_expenses_previous) / creditors_previous
+        itr_ratio_previous = cost_of_sales_previous / stocks_previous
+        wr_score_previous = (current_assets_previous / total_assets_previous) / (creditors_previous / total_assets_previous)
+        gap_index_previous = (itr_ratio_previous / wr_score_previous) * 100
+        cash_ratio_previous = cash_and_cash_equivalents_previous / creditors_previous
+
+        with st.container(border=True):
+            c1, c2, c3, c4, c5, c6 = st.columns([1,1,1,1,1,1])
+
+            with c1.container(border=True):
+                st.header('WC Ratio')
+                display_metrics('WC Latest Year', wc_ratio_latest, 'WC Previous Year', wc_ratio_previous)
+            with c2.container(border=True):
+                st.header('Quick Ratio')
+                display_metrics('Quick Latest Year', quick_ratio_latest, 'Quick Previous Year', quick_ratio_previous)
+            with c3.container(border=True):
+                st.header('ITR Ratio')
+                display_metrics('ITR Latest Year', itr_ratio_latest, 'ITR Previous Year', itr_ratio_previous)
+            with c4.container(border=True):
+                st.header('WR Score')
+                display_metrics('WR Latest Year', wr_score_latest, 'WR Previous Year', wr_score_previous)
+            with c5.container(border=True):
+                st.header('GAP Index')
+                display_metrics('GAP Latest Year', gap_index_latest, 'GAP Previous Year', gap_index_previous)
+            with c6.container(border=True):
+                st.header('Cash Ratio')
+                display_metrics('Cash Latest Year', cash_ratio_latest, 'Cash Previous Year', cash_ratio_previous)
     else:
         st.error("Financial ratios not found in the database.")
 
