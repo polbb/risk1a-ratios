@@ -72,19 +72,19 @@ if data:
         cash_and_cash_equivalents_previous = int(ratios_response['Item'].get('cash_and_cash_equivalents', [{}])[1].get('value', 'N/A'))
 
         # Calculate ratios for latest and previous year
-        wc_ratio_latest = current_assets_latest / creditors_latest
-        quick_ratio_latest = (current_assets_latest - inventory_prepaid_expenses_latest) / creditors_latest
-        itr_ratio_latest = cost_of_sales_latest / stocks_latest
-        wr_score_latest = (current_assets_latest / total_assets_latest) / (creditors_latest / total_assets_latest)
-        gap_index_latest = (itr_ratio_latest / wr_score_latest) * 100
-        cash_ratio_latest = cash_and_cash_equivalents_latest / creditors_latest
+        wc_ratio_latest = current_assets_latest / creditors_latest if 'N/A' not in [current_assets_latest, creditors_latest] else 'N/A'
+        quick_ratio_latest = (current_assets_latest - inventory_prepaid_expenses_latest) / creditors_latest if 'N/A' not in [current_assets_latest, inventory_prepaid_expenses_latest, creditors_latest] else 'N/A'
+        itr_ratio_latest = cost_of_sales_latest / stocks_latest if 'N/A' not in [cost_of_sales_latest, stocks_latest] else 'N/A'
+        wr_score_latest = (current_assets_latest / total_assets_latest) / (creditors_latest / total_assets_latest) if 'N/A' not in [current_assets_latest, total_assets_latest, creditors_latest] else 'N/A'
+        gap_index_latest = (itr_ratio_latest / wr_score_latest) * 100 if 'N/A' not in [itr_ratio_latest, wr_score_latest] else 'N/A'
+        cash_ratio_latest = cash_and_cash_equivalents_latest / creditors_latest if 'N/A' not in [cash_and_cash_equivalents_latest, creditors_latest] else 'N/A'
 
-        wc_ratio_previous = current_assets_previous / creditors_previous
-        quick_ratio_previous = (current_assets_previous - inventory_prepaid_expenses_previous) / creditors_previous
-        itr_ratio_previous = cost_of_sales_previous / stocks_previous
-        wr_score_previous = (current_assets_previous / total_assets_previous) / (creditors_previous / total_assets_previous)
-        gap_index_previous = (itr_ratio_previous / wr_score_previous) * 100
-        cash_ratio_previous = cash_and_cash_equivalents_previous / creditors_previous
+        wc_ratio_previous = current_assets_previous / creditors_previous if 'N/A' not in [current_assets_previous, creditors_previous] else 'N/A'
+        quick_ratio_previous = (current_assets_previous - inventory_prepaid_expenses_previous) / creditors_previous if 'N/A' not in [current_assets_previous, inventory_prepaid_expenses_previous, creditors_previous] else 'N/A'
+        itr_ratio_previous = cost_of_sales_previous / stocks_previous if 'N/A' not in [cost_of_sales_previous, stocks_previous] else 'N/A'
+        wr_score_previous = (current_assets_previous / total_assets_previous) / (creditors_previous / total_assets_previous) if 'N/A' not in [current_assets_previous, total_assets_previous, creditors_previous] else 'N/A'
+        gap_index_previous = (itr_ratio_previous / wr_score_previous) * 100 if 'N/A' not in [itr_ratio_previous, wr_score_previous] else 'N/A'
+        cash_ratio_previous = cash_and_cash_equivalents_previous / creditors_previous if 'N/A' not in [cash_and_cash_equivalents_previous, creditors_previous] else 'N/A'
 
         with st.container(border=True):
             c1, c2, c3, c4, c5, c6 = st.columns([1,1,1,1,1,1])
