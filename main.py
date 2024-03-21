@@ -50,7 +50,8 @@ if data:
     if 'Item' in ratios_response:
         cost_of_sales_data = ratios_response['Item']['cost_of_sales'][0]
         st.write(cost_of_sales_data)
-        stocks_data = ratios_response['Item']['stocks'][0]
+        stocks_data = ratios_response['Item']['stocks']
+        st.write(stocks_data)
         
         # # Adjust for decimals
         # cost_of_sales = int(cost_of_sales_data) / (10 ** int(ratios_response['Item']['cost_of_sales']['L'][-1]['M']['decimals']['S']))
