@@ -26,5 +26,8 @@ data = st.button("Retrieve Data")
 
 if data:  # calc ratio button pressed
 
-    pass
+    # Ensure the CIK is a string and has leading zeros if necessary
+    cik_str = str(data).zfill(10)
+
+    
 
