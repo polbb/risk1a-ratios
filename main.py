@@ -1,6 +1,6 @@
 import streamlit as st
 import boto3
-from helper_functions import display_metrics
+from helper_functions import display_metrics, display_metrics_floor
 import json
 
 with open( "style.css" ) as css:
@@ -100,12 +100,12 @@ if data:
                 display_metrics('WR Latest', wr_score_latest, 'WR Previous', wr_score_previous)
             with c5.container(border=True):
                 st.header('GAP Index')
-                display_metrics('GAP Latest', gap_index_latest, 'GAP Previous', gap_index_previous)
+                display_metrics_floor('GAP Latest', gap_index_latest, 'GAP Previous', gap_index_previous)
             with c6.container(border=True):
                 st.header('Cash Ratio')
                 display_metrics('Cash Latest', cash_ratio_latest, 'Cash Previous', cash_ratio_previous)
-            st.header('GAP Index')
-            display_metrics('GAP Latest', gap_index_latest, 'GAP Previous', gap_index_previous)
+            # st.header('GAP Index')
+            # display_metrics('GAP Latest', gap_index_latest, 'GAP Previous', gap_index_previous)
 
     else:
         st.error("Financial ratios not found in the database.")
