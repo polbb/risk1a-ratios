@@ -48,10 +48,10 @@ if data:
     ratios_table = dynamodb.Table('sec_ratios')
     ratios_response = ratios_table.get_item(Key={'companyID': cik_str, 'year': latest_year})
     if 'Item' in ratios_response:
-        cost_of_sales_data_latest = ratios_response['Item'].get('cost_of_sales', [{}])[0].get('value', 'N/A')
-        stocks_data_latest = ratios_response['Item'].get('stocks', [{}])[0].get('value', 'N/A')
-        cost_of_sales_data_previous = ratios_response['Item'].get('cost_of_sales', [{}])[1].get('value', 'N/A')
-        stocks_data_previous = ratios_response['Item'].get('stocks', [{}])[1].get('value', 'N/A')
+        cost_of_sales_data_latest = int(ratios_response['Item'].get('cost_of_sales', [{}])[0].get('value', 'N/A'))
+        stocks_data_latest = int(ratios_response['Item'].get('stocks', [{}])[0].get('value', 'N/A'))
+        cost_of_sales_data_previous = int(ratios_response['Item'].get('cost_of_sales', [{}])[1].get('value', 'N/A'))
+        stocks_data_previous = int(ratios_response['Item'].get('stocks', [{}])[1].get('value', 'N/A'))
         
         if cost_of_sales_data_latest != 'N/A' and stocks_data_latest != 'N/A' and cost_of_sales_data_previous != 'N/A' and stocks_data_previous != 'N/A':
             # Calculate ITR Ratio for latest and previous year
