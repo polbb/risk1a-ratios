@@ -18,8 +18,8 @@ dynamodb = boto3.resource('dynamodb', aws_access_key_id=aws_access_key_id, aws_s
 # Streamlit UI
 st.title("ArgoXai")
 col1, col2, _, _, _, _, _, _ = st.columns([3,3,1,1,1,1,1,1])
-company_number = col1.text_input()
-data = col2.button("Retrieve Data")
+company_number = col1.text_input("Enter CIK code")
+data = st.button("Retrieve Data")
 
 if data:
     # Ensure the CIK is a string and has leading zeros if necessary
