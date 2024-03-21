@@ -88,22 +88,22 @@ if data:
 
             with c1.container(border=True):
                 st.header('WC Ratio')
-                display_metrics('WC Latest Year', wc_ratio_latest, 'WC Previous Year', wc_ratio_previous)
+                display_metrics('WC Latest', wc_ratio_latest, 'WC Previous', wc_ratio_previous)
             with c2.container(border=True):
                 st.header('Quick Ratio')
-                display_metrics('Quick Latest Year', quick_ratio_latest, 'Quick Previous Year', quick_ratio_previous)
+                display_metrics('Quick Latest', quick_ratio_latest, 'Quick Previous', quick_ratio_previous)
             with c3.container(border=True):
                 st.header('ITR Ratio')
-                display_metrics('ITR Latest Year', itr_ratio_latest, 'ITR Previous Year', itr_ratio_previous)
+                display_metrics('ITR Latest', itr_ratio_latest, 'ITR Previous', itr_ratio_previous)
             with c4.container(border=True):
                 st.header('WR Score')
-                display_metrics('WR Latest Year', wr_score_latest, 'WR Previous Year', wr_score_previous)
+                display_metrics('WR Latest', wr_score_latest, 'WR Previous', wr_score_previous)
             with c5.container(border=True):
                 st.header('GAP Index')
-                display_metrics('GAP Latest Year', gap_index_latest, 'GAP Previous Year', gap_index_previous)
+                display_metrics('GAP Latest', gap_index_latest, 'GAP Previous', gap_index_previous)
             with c6.container(border=True):
                 st.header('Cash Ratio')
-                display_metrics('Cash Latest Year', cash_ratio_latest, 'Cash Previous Year', cash_ratio_previous)
+                display_metrics('Cash Latest', cash_ratio_latest, 'Cash Previous', cash_ratio_previous)
     else:
         st.error("Financial ratios not found in the database.")
 
