@@ -48,23 +48,27 @@ if data:
     ratios_table = dynamodb.Table('sec_ratios')
     ratios_response = ratios_table.get_item(Key={'companyID': cik_str, 'year': latest_year})
     if 'Item' in ratios_response:
-        cost_of_sales_data = ratios_response['Item']['cost_of_sales'][0]
-        st.write(cost_of_sales_data)
-        stocks_data = ratios_response['Item']['stocks']
-        st.write(stocks_data)
+        cost_of_sales_data = ratios_response['Item'].get('cost_of_sales', [{}])[0].get('value', 'N/A')
+        stocks_data = ratios_response['Item'].get('stocks', [{}])[0].get('value', 'N/A')
         
-        # # Adjust for decimals
-        # cost_of_sales = int(cost_of_sales_data) / (10 ** int(ratios_response['Item']['cost_of_sales']['L'][-1]['M']['decimals']['S']))
-        # stocks = int(stocks_data) / (10 ** int(ratios_response['Item']['stocks']['L'][-1]['M']['decimals']['S']))
-        
-        # # Calculate ITR Ratio
-        # itr_ratio = cost_of_sales / stocks
+        if cost_of_sales_data != 'N/A' and stocks_data != 'N/A':
+            st.write(cost_of_sales_data)
+            st.write(stocks_data)
+            
+            # Adjust for decimals
+            cost_of_sales = int(cost_of_sales_data)
+            stocks = int(stocks_data)
+            
+            # Calculate ITR Ratio
+            itr_ratio = cost_of_sales / stocks
 
-        # if itr_ratio:
-        #     with st.container():
-        #         st.header('ITR Ratio')
-        #         display_metrics('ITR', itr_ratio)
-        # else:
-        #     st.warning("ITR Ratio is not available or is null.")
+            if itr_ratio:
+                with st.container():
+                    st.header('ITR Ratio')
+                    display_metrics('ITR', itr_ratio)
+            else:
+                st.warning("ITR Ratio is not available or is null.")
+        else:
+            st.error("Cost of Sales or Stocks data is not available.")
     else:
         st.error("Financial ratios not found in the database.")
