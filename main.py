@@ -48,30 +48,22 @@ if data:
     ratios_table = dynamodb.Table('sec_ratios')
     ratios_response = ratios_table.get_item(Key={'companyID': cik_str, 'year': latest_year})
     if 'Item' in ratios_response:
-        cost_of_sales_data = ratios_response['Item'].get('cost_of_sales', [{}])[0].get('value', 'N/A')
-        stocks_data = ratios_response['Item'].get('stocks', [{}])[0].get('value', 'N/A')
-        cost_of_sales_decimals = ratios_response['Item'].get('cost_of_sales', [{}])[0].get('decimals', 0)
-        stocks_decimals = ratios_response['Item'].get('stocks', [{}])[0].get('decimals', 0)
+        cost_of_sales_data_latest = ratios_response['Item'].get('cost_of_sales', [{}])[0].get('value', 'N/A')
+        stocks_data_latest = ratios_response['Item'].get('stocks', [{}])[0].get('value', 'N/A')
+        cost_of_sales_data_previous = ratios_response['Item'].get('cost_of_sales', [{}])[1].get('value', 'N/A')
+        stocks_data_previous = ratios_response['Item'].get('stocks', [{}])[1].get('value', 'N/A')
         
-        if cost_of_sales_data != 'N/A' and stocks_data != 'N/A':
+        if cost_of_sales_data_latest != 'N/A' and stocks_data_latest != 'N/A' and cost_of_sales_data_previous != 'N/A' and stocks_data_previous != 'N/A':
+            # Calculate ITR Ratio for latest and previous year
+            itr_ratio_latest = cost_of_sales_data_latest / stocks_data_latest
+            itr_ratio_previous = cost_of_sales_data_previous / stocks_data_previous
 
-            
-            # Adjust for decimals
-            cost_of_sales = int(cost_of_sales_data) * (10 ** int(cost_of_sales_decimals))
-            stocks = int(stocks_data) * (10 ** int(stocks_decimals))
-            st.write(cost_of_sales)
-            st.write(stocks)
-            
-            # Calculate ITR Ratio
-            itr_ratio = cost_of_sales / stocks
-
-            if itr_ratio:
-                with st.container(border=True):
-                    st.header('ITR Ratio')
-                    display_metrics('ITR', itr_ratio)
-            else:
-                st.warning("ITR Ratio is not available or is null.")
+            with st.container(border=True):
+                st.header('ITR Ratio')
+                display_metrics('ITR Latest Year', itr_ratio_latest)
+                display_metrics('ITR Previous Year', itr_ratio_previous)
         else:
-            st.error("Cost of Sales or Stocks data is not available.")
+            st.error("Cost of Sales or Stocks data is not available for one or both years.")
     else:
         st.error("Financial ratios not found in the database.")
+
