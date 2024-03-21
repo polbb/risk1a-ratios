@@ -31,10 +31,9 @@ if data:
         if latest_year:
             s3_key = risk_factors[latest_year]['s3key']
             bucket_name = 'argoxai-sec'
-            file_path = f'txt/risk_factors/{s3_key}'
             
             # Retrieve the text file from S3
-            obj = s3_client.get_object(Bucket=bucket_name, Key=file_path)
+            obj = s3_client.get_object(Bucket=bucket_name, Key=s3_key)
             text_data = obj['Body'].read().decode('utf-8')
             
             # Display the text file content
