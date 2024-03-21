@@ -41,7 +41,7 @@ if data:
             text_data = obj['Body'].read().decode('utf-8')
             
             # Display the text file content for Risk Factors
-            st.text_area("Risk Factors", value=text_data, height=900)
+            st.text_area("Risk Factors", value=text_data, height=600)
         else:
             st.error("No data available for the latest year.")
     else:
