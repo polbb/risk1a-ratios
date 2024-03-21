@@ -48,9 +48,9 @@ if data:
     ratios_table = dynamodb.Table('sec_ratios')
     ratios_response = ratios_table.get_item(Key={'companyID': cik_str, 'year': latest_year})
     if 'Item' in ratios_response:
-        cost_of_sales_data = ratios_response['Item']['cost_of_sales'][0]['value']
+        cost_of_sales_data = ratios_response['Item']['cost_of_sales'][0]
         st.write(cost_of_sales_data)
-        stocks_data = ratios_response['Item']['stocks'][0]['value']
+        stocks_data = ratios_response['Item']['stocks'][0]
         
         # # Adjust for decimals
         # cost_of_sales = int(cost_of_sales_data) / (10 ** int(ratios_response['Item']['cost_of_sales']['L'][-1]['M']['decimals']['S']))
