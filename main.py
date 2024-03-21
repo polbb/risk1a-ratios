@@ -37,11 +37,9 @@ if data:
             text_data = obj['Body'].read().decode('utf-8')
             
             # Display the text file content
-            st.text_area("Risk Factors", value=text_data, height=300)
+            st.text_area("Risk Factors", value=text_data, height=900)
         else:
             st.error("No data available for the latest year.")
     else:
         st.error("CIK code not found in the database.")
-
-
 
