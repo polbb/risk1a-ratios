@@ -10,7 +10,7 @@ aws_secret_access_key = st.secrets.AWS_SECRET_ACCESS_KEY
 aws_default_region = st.secrets.AWS_DEFAULT_REGION
 
 
-with open( "src/scripts/style.css" ) as css:
+with open( "style.css" ) as css:
     st.markdown( f'<style>{css.read()}</style>' , unsafe_allow_html= True)
     
 
