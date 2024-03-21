@@ -54,12 +54,13 @@ if data:
         stocks_decimals = ratios_response['Item'].get('stocks', [{}])[0].get('decimals', 0)
         
         if cost_of_sales_data != 'N/A' and stocks_data != 'N/A':
-            st.write(cost_of_sales_data)
-            st.write(stocks_data)
+
             
             # Adjust for decimals
             cost_of_sales = int(cost_of_sales_data) * (10 ** int(cost_of_sales_decimals))
             stocks = int(stocks_data) * (10 ** int(stocks_decimals))
+            st.write(cost_of_sales)
+            st.write(stocks)
             
             # Calculate ITR Ratio
             itr_ratio = cost_of_sales / stocks
