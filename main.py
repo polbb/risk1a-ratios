@@ -1,7 +1,5 @@
 # APP VERSION v0.1-D
 import streamlit as st
-
-from streamlit_xhtml import streamlit_xhtml
 # from dotenv import load_dotenv
 import os
 
