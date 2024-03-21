@@ -58,8 +58,8 @@ if data:
             st.write(stocks_data)
             
             # Adjust for decimals
-            cost_of_sales = int(cost_of_sales_data) * (10 ** cost_of_sales_decimals)
-            stocks = int(stocks_data) * (10 ** stocks_decimals)
+            cost_of_sales = int(cost_of_sales_data) * (10 ** int(cost_of_sales_decimals))
+            stocks = int(stocks_data) * (10 ** int(stocks_decimals))
             
             # Calculate ITR Ratio
             itr_ratio = cost_of_sales / stocks
