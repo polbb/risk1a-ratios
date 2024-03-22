@@ -61,21 +61,35 @@ if data:
             except ValueError:
                 return 'N/A'
 
-        current_assets_latest = parse_int(ratios_response['Item'].get('current_assets', [{}])[0].get('value', 'N/A'))
-        creditors_latest = parse_int(ratios_response['Item'].get('creditors', [{}])[0].get('value', 'N/A'))
-        inventory_prepaid_expenses_latest = parse_int(ratios_response['Item'].get('inventory_prepaid_expenses', [{}])[0].get('value', 'N/A'))
-        cost_of_sales_latest = parse_int(ratios_response['Item'].get('cost_of_sales', [{}])[0].get('value', 'N/A'))
-        stocks_latest = parse_int(ratios_response['Item'].get('stocks', [{}])[0].get('value', 'N/A'))
-        total_assets_latest = parse_int(ratios_response['Item'].get('total_assets', [{}])[0].get('value', 'N/A'))
-        cash_and_cash_equivalents_latest = parse_int(ratios_response['Item'].get('cash_and_cash_equivalents', [{}])[0].get('value', 'N/A'))
+        # Introduce conditional checks to prevent errors when accessing list elements
+        def safe_get_value(data, index, key):
+            if data and len(data) > index:
+                return parse_int(data[index].get(key, 'N/A'))
+            return 'N/A'
 
-        current_assets_previous = parse_int(ratios_response['Item'].get('current_assets', [{}])[1].get('value', 'N/A'))
-        creditors_previous = parse_int(ratios_response['Item'].get('creditors', [{}])[1].get('value', 'N/A'))
-        inventory_prepaid_expenses_previous = parse_int(ratios_response['Item'].get('inventory_prepaid_expenses', [{}])[1].get('value', 'N/A'))
-        cost_of_sales_previous = parse_int(ratios_response['Item'].get('cost_of_sales', [{}])[1].get('value', 'N/A'))
-        stocks_previous = parse_int(ratios_response['Item'].get('stocks', [{}])[1].get('value', 'N/A'))
-        total_assets_previous = parse_int(ratios_response['Item'].get('total_assets', [{}])[1].get('value', 'N/A'))
-        cash_and_cash_equivalents_previous = parse_int(ratios_response['Item'].get('cash_and_cash_equivalents', [{}])[1].get('value', 'N/A'))
+        current_assets_data = ratios_response['Item'].get('current_assets', [{}])
+        creditors_data = ratios_response['Item'].get('creditors', [{}])
+        inventory_prepaid_expenses_data = ratios_response['Item'].get('inventory_prepaid_expenses', [{}])
+        cost_of_sales_data = ratios_response['Item'].get('cost_of_sales', [{}])
+        stocks_data = ratios_response['Item'].get('stocks', [{}])
+        total_assets_data = ratios_response['Item'].get('total_assets', [{}])
+        cash_and_cash_equivalents_data = ratios_response['Item'].get('cash_and_cash_equivalents', [{}])
+
+        current_assets_latest = safe_get_value(current_assets_data, 0, 'value')
+        creditors_latest = safe_get_value(creditors_data, 0, 'value')
+        inventory_prepaid_expenses_latest = safe_get_value(inventory_prepaid_expenses_data, 0, 'value')
+        cost_of_sales_latest = safe_get_value(cost_of_sales_data, 0, 'value')
+        stocks_latest = safe_get_value(stocks_data, 0, 'value')  # Adjusted to prevent errors
+        total_assets_latest = safe_get_value(total_assets_data, 0, 'value')
+        cash_and_cash_equivalents_latest = safe_get_value(cash_and_cash_equivalents_data, 0, 'value')
+
+        current_assets_previous = safe_get_value(current_assets_data, 1, 'value')
+        creditors_previous = safe_get_value(creditors_data, 1, 'value')
+        inventory_prepaid_expenses_previous = safe_get_value(inventory_prepaid_expenses_data, 1, 'value')
+        cost_of_sales_previous = safe_get_value(cost_of_sales_data, 1, 'value')
+        stocks_previous = safe_get_value(stocks_data, 1, 'value')  # Adjusted to prevent errors
+        total_assets_previous = safe_get_value(total_assets_data, 1, 'value')
+        cash_and_cash_equivalents_previous = safe_get_value(cash_and_cash_equivalents_data, 1, 'value')
 
         # Calculate ratios for latest and previous year
         wc_ratio_latest = current_assets_latest / creditors_latest if 'N/A' not in [current_assets_latest, creditors_latest] else 'N/A'
